@@ -12,7 +12,7 @@
 
 `Slice.php`
 
-```
+```php
 class Slice extends DataObject
 {
     private static $has_one = array(
@@ -26,7 +26,7 @@ class Slice extends DataObject
 
 `Page.php`
 
-```
+```php
 class Page extends SiteTree
 {
     private static $has_many = array(
