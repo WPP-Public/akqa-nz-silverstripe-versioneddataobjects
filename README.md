@@ -9,6 +9,7 @@ Provides Versioned DataObjects and CMS publishing buttons in SilverStripe
 ## Example
 
 ![Versioned DataObject Example](resources/example.png?raw=true)
+![Versioned DataObject Example 2](resources/example2.png?raw=true)
 
 ## Usage
 
