@@ -1,5 +1,7 @@
 # SilverStripe Versioned DataObjects
 
+Provides Versioned DataObjects and CMS publishing buttons in SilverStripe
+
 ## Installation (with composer)
 
 	$ composer require heyday/silverstripe-versioneddataobjects
