@@ -1,0 +1,13 @@
+{
+    "name": "heyday/silverstripe-versioneddataobjects",
+    "description": "Provides Versioned DataObjects in SilverStripe",
+    "authors": [
+        {
+            "name": "Cam Spiers",
+            "email": "camspiers@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "~3.7"
+    }
+}
