@@ -60,3 +60,7 @@ class Page extends SiteTree
 ## Unit testing
 
 None :(
+
+##License
+
+SilverStripe Versioned DataObjects is licensed under an [MIT license](http://heyday.mit-license.org/)
