@@ -37,15 +37,20 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
                 ->setAttribute('data-text-alternate', _t('CMSMain.SAVEDRAFT', 'Save draft'))
                 ->setUseButtonTag(true)
         );
+        
+        $published = $this->record->isPublished();
 
         /* @var $publish FormAction */
-        $publish = FormAction::create('publish', _t('SiteTree.BUTTONPUBLISHED', 'Published'))
+        $publish = FormAction::create(
+            'publish',
+            $published ? _t('SiteTree.BUTTONPUBLISHED', 'Published') : _t('SiteTree.BUTTONSAVEPUBLISH', 'Save & publish')
+            )
             ->setAttribute('data-icon', 'accept')
             ->setAttribute('data-icon-alternate', 'disk')
             ->setAttribute('data-text-alternate', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save & publish'))
             ->setUseButtonTag(true);
 
-        if ($this->record->stagesDiffer('Stage', 'Live')) {
+        if ($this->record->stagesDiffer('Stage', 'Live') && $published) {
             $publish->addExtraClass('ss-ui-alternate');
 
             $actions->push(
@@ -67,12 +72,14 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
 
         $actions->push($publish);
 
-        if ($this->record->isPublished()) {
+        if ($published) {
             /* @var $unpublish FormAction */
             $unpublish = FormAction::create('unpublish', _t('SiteTree.BUTTONUNPUBLISH', 'Unpublish'), 'delete')
                 ->addExtraClass('ss-ui-action-destructive');
 
             $actions->push($unpublish);
+            
+            $actions->removeByName('action_doDelete');
         }
 
         return $form;
