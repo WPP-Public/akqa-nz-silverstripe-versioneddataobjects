@@ -27,59 +27,62 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
     {
         $form = parent::ItemEditForm();
         /* @var $actions FieldList */
-        $actions = $form->Actions();
+        if ($form instanceof Form) {
+            $actions = $form->Actions();
 
-        $actions->replaceField(
-            'action_doSave',
-            FormAction::create('save', _t('SiteTree.BUTTONSAVED', 'Saved'))
-                ->setAttribute('data-icon', 'accept')
-                ->setAttribute('data-icon-alternate', 'addpage')
-                ->setAttribute('data-text-alternate', _t('CMSMain.SAVEDRAFT', 'Save draft'))
-                ->setUseButtonTag(true)
-        );
-        
-        $published = $this->record->isPublished();
-
-        /* @var $publish FormAction */
-        $publish = FormAction::create(
-            'publish',
-            $published ? _t('SiteTree.BUTTONPUBLISHED', 'Published') : _t('SiteTree.BUTTONSAVEPUBLISH', 'Save & publish')
-            )
-            ->setAttribute('data-icon', 'accept')
-            ->setAttribute('data-icon-alternate', 'disk')
-            ->setAttribute('data-text-alternate', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save & publish'))
-            ->setUseButtonTag(true);
-
-        if ($this->record->stagesDiffer('Stage', 'Live') && $published) {
-            $publish->addExtraClass('ss-ui-alternate');
-
-            $actions->push(
-                FormAction::create(
-                    'rollback',
-                    _t(
-                        'SiteTree.BUTTONCANCELDRAFT',
-                        'Cancel draft changes'
-                    ),
-                    'delete'
-                )->setDescription(
-                        _t(
-                            'SiteTree.BUTTONCANCELDRAFTDESC',
-                            'Delete your draft and revert to the currently published page'
-                        )
-                    )
+            $actions->replaceField(
+                'action_doSave',
+                FormAction::create('save', _t('SiteTree.BUTTONSAVED', 'Saved'))
+                    ->setAttribute('data-icon', 'accept')
+                    ->setAttribute('data-icon-alternate', 'addpage')
+                    ->setAttribute('data-text-alternate', _t('CMSMain.SAVEDRAFT', 'Save draft'))
+                    ->setUseButtonTag(true)
             );
-        }
 
-        $actions->push($publish);
+            $published = $this->record->isPublished();
 
-        if ($published) {
-            /* @var $unpublish FormAction */
-            $unpublish = FormAction::create('unpublish', _t('SiteTree.BUTTONUNPUBLISH', 'Unpublish'), 'delete')
-                ->addExtraClass('ss-ui-action-destructive');
+            /* @var $publish FormAction */
+            $publish = FormAction::create(
+                'publish',
+                $published ? _t('SiteTree.BUTTONPUBLISHED', 'Published') : _t('SiteTree.BUTTONSAVEPUBLISH', 'Save & publish')
+            )
+                ->setAttribute('data-icon', 'accept')
+                ->setAttribute('data-icon-alternate', 'disk')
+                ->setAttribute('data-text-alternate', _t('SiteTree.BUTTONSAVEPUBLISH', 'Save & publish'))
+                ->setUseButtonTag(true);
 
-            $actions->push($unpublish);
+            if ($this->record->stagesDiffer('Stage', 'Live') && $published) {
+                $publish->addExtraClass('ss-ui-alternate');
+
+                $actions->push(
+                    FormAction::create(
+                        'rollback',
+                        _t(
+                            'SiteTree.BUTTONCANCELDRAFT',
+                            'Cancel draft changes'
+                        ),
+                        'delete'
+                    )->setDescription(
+                            _t(
+                                'SiteTree.BUTTONCANCELDRAFTDESC',
+                                'Delete your draft and revert to the currently published page'
+                            )
+                        )
+                );
+            }
+
+            $actions->push($publish);
+
+            if ($published) {
+                /* @var $unpublish FormAction */
+                $unpublish = FormAction::create('unpublish', _t('SiteTree.BUTTONUNPUBLISH', 'Unpublish'), 'delete')
+                    ->addExtraClass('ss-ui-action-destructive');
+
+                $actions->push($unpublish);
+
+                $actions->removeByName('action_doDelete');
+            }
             
-            $actions->removeByName('action_doDelete');
         }
 
         return $form;
