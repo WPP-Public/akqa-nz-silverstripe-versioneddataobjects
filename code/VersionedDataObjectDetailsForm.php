@@ -154,13 +154,10 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
 
         // TODO Save this item into the given relationship
 
-        $link = '<a href="' . $this->Link('edit') . '">"'
-            . htmlspecialchars($this->record->Title, ENT_QUOTES)
-            . '"</a>';
         $message = sprintf(
-            'Published %s %s',
+            'Published %s "%s"',
             $this->record->i18n_singular_name(),
-            $link
+            $this->record->Title
         );
 
         $form->sessionMessage($message, 'good');
