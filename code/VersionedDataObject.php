@@ -26,9 +26,6 @@ class VersionedDataObject extends Versioned
             'db'                => array(
                 'Version' => 'Int',
             ),
-            'has_many'          => array(
-                'Versions' => $class
-            ),
             'searchable_fields' => array()
         );
     }
