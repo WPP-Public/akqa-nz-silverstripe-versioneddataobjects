@@ -60,8 +60,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
                         _t(
                             'SiteTree.BUTTONCANCELDRAFT',
                             'Cancel draft changes'
-                        ),
-                        'delete'
+                        )
                     )->setDescription(
                             _t(
                                 'SiteTree.BUTTONCANCELDRAFTDESC',
@@ -75,7 +74,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
 
             if ($published) {
                 /* @var $unpublish FormAction */
-                $unpublish = FormAction::create('unpublish', _t('SiteTree.BUTTONUNPUBLISH', 'Unpublish'), 'delete')
+                $unpublish = FormAction::create('unpublish', _t('SiteTree.BUTTONUNPUBLISH', 'Unpublish'))
                     ->addExtraClass('ss-ui-action-destructive');
 
                 $actions->push($unpublish);
