@@ -37,18 +37,17 @@ class VersionedDataObject extends Versioned
         $fields = array_merge(
             $fields,
             array(
-                'isModifiedNice'  => 'Modified',
-                'isPublishedNice' => 'Published'
+                'CMSPublishedState'  => 'State'
             )
         );
     }
+
     /**
      * @param $fields
      */
     public function updateSearchableFields(&$fields)
     {
-        unset($fields['isModifiedNice']);
-        unset($fields['isPublishedNice']);
+        unset($fields['CMSPublishedState']);
     }
     /**
      * @return bool
@@ -81,26 +80,32 @@ class VersionedDataObject extends Versioned
         return (bool) DB::query("SELECT \"ID\" FROM \"{$table}_Live\" WHERE \"ID\" = {$this->owner->ID}")->value();
     }
     /**
-     * @param $value
-     * @return string
+     * @return string - HTML
      */
-    protected function getBooleanNice($value)
+    public function getCMSPublishedState()
     {
-        return $value ? 'Yes' : 'No';
-    }
-    /**
-     * @return mixed
-     */
-    public function isPublishedNice()
-    {
-        return $this->getBooleanNice($this->isPublished());
-    }
-    /**
-     * @return mixed
-     */
-    public function isModifiedNice()
-    {
-        return $this->getBooleanNice($this->stagesDiffer('Stage', 'Live'));
+        $html = new HTMLText('PublishedIcon');
+
+        if ($this->isPublished()) {
+            if ($this->stagesDiffer('Stage', 'Live')) {
+                $colour = '#1391DF';
+                $text = 'Modified';
+            } else {
+                $colour = '#18BA18';
+                $text = 'Published';
+            }
+        } else {
+            $colour = '#C00';
+            $text = 'Draft';
+        }
+
+        $html->setValue(sprintf(
+            '<span style="color: %s;">%s</span>',
+            $colour,
+            htmlentities($text)
+        ));
+        
+        return $html;
     }
     /**
      * @param FieldList $fields
