@@ -81,7 +81,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
 
                 $actions->removeByName('action_doDelete');
             }
-            
+
         }
 
         return $form;
@@ -131,7 +131,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
 
         try {
             $form->saveInto($this->record);
-            $this->record->write();
+            $this->record->writeToStage('Stage');;
             $list->add($this->record, $extraData);
             $this->record->publish('Stage', 'Live');
         } catch (ValidationException $e) {
@@ -144,6 +144,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
                     return $controller->redirectBack();
                 }
             ));
+
             if ($controller->getRequest()->isAjax()) {
                 $controller->getRequest()->addHeader('X-Pjax', 'CurrentForm');
             }
