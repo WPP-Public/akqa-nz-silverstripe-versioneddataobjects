@@ -125,4 +125,13 @@ class VersionedDataObject extends Versioned
             $this->migrateVersion($this->owner->Version);
         }
     }
+
+    /**
+    *
+    */
+    public function onAfterWrite() {
+        if ($this->owner->isPublished() ) {
+            $this->owner->extend('onAfterPublish', $this->owner);
+        }
+    }
 }
