@@ -125,4 +125,13 @@ class VersionedDataObject extends Versioned
             $this->migrateVersion($this->owner->Version);
         }
     }
+
+    /**
+    *
+    */
+    public function publish($fromStage, $toStage, $createNewVersion = false) {
+        parent::publish($fromStage, $toStage, $createNewVersion);
+        $this->owner->extend('onAfterVersionedPublish', $fromStage, $toStage, $createNewVersion);
+    }
+
 }
