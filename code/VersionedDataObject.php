@@ -129,9 +129,9 @@ class VersionedDataObject extends Versioned
     /**
     *
     */
-    public function onAfterWrite() {
-        if ($this->owner->isPublished() ) {
-            $this->owner->extend('onAfterPublish', $this->owner);
-        }
+    public function publish($fromStage, $toStage, $createNewVersion = false) {
+        parent::publish($fromStage, $toStage, $createNewVersion);
+        $this->owner->extend('onAfterVersionedPublish', $fromStage, $toStage, $createNewVersion);
     }
+
 }
