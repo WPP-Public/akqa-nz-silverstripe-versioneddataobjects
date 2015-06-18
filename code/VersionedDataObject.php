@@ -2,9 +2,6 @@
 
 class VersionedDataObject extends Versioned
 {
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct(
@@ -14,12 +11,7 @@ class VersionedDataObject extends Versioned
             )
         );
     }
-    /**
-     * @param  null  $class
-     * @param        $extension
-     * @param        $args
-     * @return array
-     */
+
     public static function get_extra_config($class, $extension, $args)
     {
         return array(
@@ -29,27 +21,28 @@ class VersionedDataObject extends Versioned
             'searchable_fields' => array()
         );
     }
+
     /**
-     * @param $fields
+     * @param array $fields
      */
     public function updateSummaryFields(&$fields)
     {
         $fields = array_merge(
             $fields,
             array(
-                'isModifiedNice'  => 'Modified',
-                'isPublishedNice' => 'Published'
+                'CMSPublishedState'  => 'State'
             )
         );
     }
+
     /**
-     * @param $fields
+     * @param array $fields
      */
     public function updateSearchableFields(&$fields)
     {
-        unset($fields['isModifiedNice']);
-        unset($fields['isPublishedNice']);
+        unset($fields['CMSPublishedState']);
     }
+
     /**
      * @return bool
      */
@@ -63,6 +56,7 @@ class VersionedDataObject extends Versioned
             return false;
         }
     }
+
     /**
      * @return bool
      */
@@ -80,39 +74,42 @@ class VersionedDataObject extends Versioned
 
         return (bool) DB::query("SELECT \"ID\" FROM \"{$table}_Live\" WHERE \"ID\" = {$this->owner->ID}")->value();
     }
+
     /**
-     * @param $value
-     * @return string
+     * @return HTMLText
      */
-    protected function getBooleanNice($value)
+    public function getCMSPublishedState()
     {
-        return $value ? 'Yes' : 'No';
+        $html = new HTMLText('PublishedState');
+
+        if ($this->isPublished()) {
+            if ($this->stagesDiffer('Stage', 'Live')) {
+                $colour = '#1391DF';
+                $text = 'Modified';
+            } else {
+                $colour = '#18BA18';
+                $text = 'Published';
+            }
+        } else {
+            $colour = '#C00';
+            $text = 'Draft';
+        }
+
+        $html->setValue(sprintf(
+            '<span style="color: %s;">%s</span>',
+            $colour,
+            htmlentities($text)
+        ));
+
+        return $html;
     }
-    /**
-     * @return mixed
-     */
-    public function isPublishedNice()
-    {
-        return $this->getBooleanNice($this->isPublished());
-    }
-    /**
-     * @return mixed
-     */
-    public function isModifiedNice()
-    {
-        return $this->getBooleanNice($this->stagesDiffer('Stage', 'Live'));
-    }
-    /**
-     * @param FieldList $fields
-     */
+
     public function updateCMSFields(FieldList $fields)
     {
         $fields->removeByName('Version');
         $fields->removeByName('Versions');
     }
-    /**
-     *
-     */
+
     public function onBeforeWrite()
     {
         $fieldsIgnoredByVersioning = array('Version');
