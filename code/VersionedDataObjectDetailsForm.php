@@ -7,19 +7,14 @@ class VersionedDataObjectDetailsForm extends GridFieldDetailForm
 {
 }
 
-/**
- * Class VersionedDataObjectDetailsForm_ItemRequest
- */
 class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_ItemRequest
 {
-    /**
-     * @var array
-     */
     private static $allowed_actions = array(
         'edit',
         'view',
         'ItemEditForm'
     );
+
     /**
      * @return Form
      */
@@ -193,6 +188,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
 
         return $this->edit(Controller::curr()->getRequest());
     }
+
     /**
      * @param $data
      * @param $form

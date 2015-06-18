@@ -2,9 +2,6 @@
 
 class VersionedDataObject extends Versioned
 {
-    /**
-     *
-     */
     public function __construct()
     {
         parent::__construct(
@@ -14,12 +11,7 @@ class VersionedDataObject extends Versioned
             )
         );
     }
-    /**
-     * @param  null  $class
-     * @param        $extension
-     * @param        $args
-     * @return array
-     */
+
     public static function get_extra_config($class, $extension, $args)
     {
         return array(
@@ -29,8 +21,9 @@ class VersionedDataObject extends Versioned
             'searchable_fields' => array()
         );
     }
+
     /**
-     * @param $fields
+     * @param array $fields
      */
     public function updateSummaryFields(&$fields)
     {
@@ -43,12 +36,13 @@ class VersionedDataObject extends Versioned
     }
 
     /**
-     * @param $fields
+     * @param array $fields
      */
     public function updateSearchableFields(&$fields)
     {
         unset($fields['CMSPublishedState']);
     }
+
     /**
      * @return bool
      */
@@ -62,6 +56,7 @@ class VersionedDataObject extends Versioned
             return false;
         }
     }
+
     /**
      * @return bool
      */
@@ -79,12 +74,13 @@ class VersionedDataObject extends Versioned
 
         return (bool) DB::query("SELECT \"ID\" FROM \"{$table}_Live\" WHERE \"ID\" = {$this->owner->ID}")->value();
     }
+
     /**
-     * @return string - HTML
+     * @return HTMLText
      */
     public function getCMSPublishedState()
     {
-        $html = new HTMLText('PublishedIcon');
+        $html = new HTMLText('PublishedState');
 
         if ($this->isPublished()) {
             if ($this->stagesDiffer('Stage', 'Live')) {
@@ -104,20 +100,16 @@ class VersionedDataObject extends Versioned
             $colour,
             htmlentities($text)
         ));
-        
+
         return $html;
     }
-    /**
-     * @param FieldList $fields
-     */
+
     public function updateCMSFields(FieldList $fields)
     {
         $fields->removeByName('Version');
         $fields->removeByName('Versions');
     }
-    /**
-     *
-     */
+
     public function onBeforeWrite()
     {
         $fieldsIgnoredByVersioning = array('Version');
