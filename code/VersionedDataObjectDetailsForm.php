@@ -89,7 +89,13 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function save($data, $form)
     {
-        return $this->doSave($data, $form);
+        $reading_mode = \Versioned::get_reading_mode();
+        \Versioned::set_reading_mode('Stage.Stage');
+
+        $value = $this->doSave($data, $form);
+
+        \Versioned::set_reading_mode($reading_mode);
+        return $value;
     }
 
     /**
