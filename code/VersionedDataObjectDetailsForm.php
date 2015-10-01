@@ -76,7 +76,6 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
 
                 $actions->removeByName('action_doDelete');
             }
-
         }
 
         return $form;
@@ -93,6 +92,22 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
         \Versioned::set_reading_mode('Stage.Stage');
 
         $value = $this->doSave($data, $form);
+
+        \Versioned::set_reading_mode($reading_mode);
+        return $value;
+    }
+
+    /**
+     * @param $data
+     * @param $form
+     * @return bool|SS_HTTPResponse
+     */
+    public function doDelete($data, $form)
+    {
+        $reading_mode = \Versioned::get_reading_mode();
+        \Versioned::set_reading_mode('Stage.Stage');
+
+        $value = parent::doDelete($data, $form);
 
         \Versioned::set_reading_mode($reading_mode);
         return $value;
