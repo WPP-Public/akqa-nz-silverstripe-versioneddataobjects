@@ -240,4 +240,16 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
 
         return $this->edit(Controller::curr()->getRequest());
     }
+
+    /////////////////////////////////////////////////////
+    // Better Buttons integration
+    ////////////////////////////////////////////////////
+    public function doSaveAndQuit($data, $form)
+    {
+        $this->save($data, $form);
+        $controller = $this->getToplevelController();
+        $controller->getResponse()->addHeader("X-Pjax","Content");
+        $controller->redirect($this->getBackLink());
+    }
+
 }
