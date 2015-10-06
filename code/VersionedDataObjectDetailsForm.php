@@ -225,9 +225,9 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
             return Controller::curr()->httpError(403);
         }
 
-        $this->record->doRollbackTo('Live');
+        $this->record->publish('Live', 'Stage');
 
-        $this->record = DataList::create($this->record->class)->byID($this->record->ID);
+        Versioned::reading_stage($origStage);
 
         $message = _t(
             'CMSMain.ROLLEDBACKPUBv2',
@@ -235,8 +235,6 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
         );
 
         $form->sessionMessage($message, 'good');
-
-        Versioned::reading_stage($origStage);
 
         return $this->edit(Controller::curr()->getRequest());
     }
