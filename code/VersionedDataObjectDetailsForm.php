@@ -218,6 +218,9 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function rollback($data, $form)
     {
+        $origStage = Versioned::current_stage();
+        Versioned::reading_stage('Stage');
+
         if (!$this->record->canEdit()) {
             return Controller::curr()->httpError(403);
         }
@@ -232,6 +235,8 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
         );
 
         $form->sessionMessage($message, 'good');
+
+        Versioned::reading_stage($origStage);
 
         return $this->edit(Controller::curr()->getRequest());
     }
