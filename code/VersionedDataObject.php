@@ -24,9 +24,7 @@ class VersionedDataObject extends Versioned
     public static function get_extra_config($class, $extension, $args)
     {
         return array(
-            'db'                => array(
-                'Version' => 'Int',
-            ),
+            'db' => array('Version' => 'Int'),
             'searchable_fields' => array()
         );
     }
@@ -39,7 +37,7 @@ class VersionedDataObject extends Versioned
         $fields = array_merge(
             $fields,
             array(
-                'CMSPublishedState'  => 'State'
+                'CMSPublishedState' => 'State'
             )
         );
     }
@@ -81,7 +79,7 @@ class VersionedDataObject extends Versioned
             $table = $p;
         }
 
-        return (bool) DB::query("SELECT \"ID\" FROM \"{$table}_Live\" WHERE \"ID\" = {$this->owner->ID}")->value();
+        return (bool)DB::query("SELECT \"ID\" FROM \"{$table}_Live\" WHERE \"ID\" = {$this->owner->ID}")->value();
     }
 
     /**
@@ -140,7 +138,8 @@ class VersionedDataObject extends Versioned
      * @param Place $toStage
      * @param bool|false $createNewVersion
      */
-    public function publish($fromStage, $toStage, $createNewVersion = false) {
+    public function publish($fromStage, $toStage, $createNewVersion = false)
+    {
         parent::publish($fromStage, $toStage, $createNewVersion);
         $this->owner->extend('onAfterVersionedPublish', $fromStage, $toStage, $createNewVersion);
     }

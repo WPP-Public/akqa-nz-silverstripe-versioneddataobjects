@@ -7,12 +7,13 @@ class VersionedModelAdmin extends ModelAdmin
 {
     /**
      * Customise the edit form so that It uses the VersionedDataObjectDetailsForm as well as make
-     * sure that the reading stage is 'Stage'. 
+     * sure that the reading stage is 'Stage'.
      * @param null $id
      * @param null $fields
      * @return mixed
      */
-    public function getEditForm($id = null, $fields = null) {
+    public function getEditForm($id = null, $fields = null)
+    {
 
         $origStage = Versioned::current_stage();
         Versioned::reading_stage('Stage');
@@ -34,7 +35,7 @@ class VersionedModelAdmin extends ModelAdmin
         );
 
         // Validation
-        if(singleton($this->modelClass)->hasMethod('getCMSValidator')) {
+        if (singleton($this->modelClass)->hasMethod('getCMSValidator')) {
             $detailValidator = singleton($this->modelClass)->getCMSValidator();
             $listField->getConfig()->getComponentByType('GridFieldDetailForm')->setValidator($detailValidator);
         }

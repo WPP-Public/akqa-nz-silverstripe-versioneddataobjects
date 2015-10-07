@@ -60,11 +60,11 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
                             'Cancel draft changes'
                         )
                     )->setDescription(
-                            _t(
-                                'SiteTree.BUTTONCANCELDRAFTDESC',
-                                'Delete your draft and revert to the currently published page'
-                            )
+                        _t(
+                            'SiteTree.BUTTONCANCELDRAFTDESC',
+                            'Delete your draft and revert to the currently published page'
                         )
+                    )
                 );
             }
 
@@ -159,7 +159,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
                 'CurrentForm' => function () use (&$form) {
                     return $form->forTemplate();
                 },
-                'default'     => function () use (&$controller) {
+                'default' => function () use (&$controller) {
                     return $controller->redirectBack();
                 }
             ));
@@ -255,7 +255,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
     {
         $this->save($data, $form);
         $controller = $this->getToplevelController();
-        $controller->getResponse()->addHeader("X-Pjax","Content");
+        $controller->getResponse()->addHeader("X-Pjax", "Content");
         $controller->redirect($this->getBackLink());
     }
 
