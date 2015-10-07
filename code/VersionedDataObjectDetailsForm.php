@@ -7,6 +7,9 @@ class VersionedDataObjectDetailsForm extends GridFieldDetailForm
 {
 }
 
+/**
+ * Class VersionedDataObjectDetailsForm_ItemRequest
+ */
 class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_ItemRequest
 {
     private static $allowed_actions = array(
@@ -242,6 +245,12 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
     /////////////////////////////////////////////////////
     // Better Buttons integration
     ////////////////////////////////////////////////////
+
+    /**
+     * Override the doSaveAnQuit action from better buttons so that it uses the versioned way fo saving things.
+     * @param $data
+     * @param $form
+     */
     public function doSaveAndQuit($data, $form)
     {
         $this->save($data, $form);
