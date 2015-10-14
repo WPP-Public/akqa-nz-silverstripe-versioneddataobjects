@@ -229,6 +229,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
         }
 
         $this->record->publish('Live', 'Stage');
+        $this->record = DataList::create($this->record->class)->byID($this->record->ID);
 
         Versioned::reading_stage($origStage);
 
