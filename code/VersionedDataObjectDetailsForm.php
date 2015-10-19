@@ -91,12 +91,12 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function save($data, $form)
     {
-        $reading_mode = \Versioned::get_reading_mode();
-        \Versioned::set_reading_mode('Stage.Stage');
+        VersionedReadingMode::setStageReadingMode();
 
         $value = $this->doSave($data, $form);
 
-        \Versioned::set_reading_mode($reading_mode);
+        VersionedReadingMode::restoreOriginalReadingMode();
+
         return $value;
     }
 
@@ -107,12 +107,12 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function doDelete($data, $form)
     {
-        $reading_mode = \Versioned::get_reading_mode();
-        \Versioned::set_reading_mode('Stage.Stage');
+        VersionedReadingMode::setStageReadingMode();
 
         $value = parent::doDelete($data, $form);
 
-        \Versioned::set_reading_mode($reading_mode);
+        VersionedReadingMode::restoreOriginalReadingMode();
+
         return $value;
     }
 
@@ -202,14 +202,13 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function unPublish()
     {
-        $origStage = Versioned::current_stage();
-        Versioned::reading_stage('Live');
+        VersionedReadingMode::setLiveReadingMode();
 
         // This way our ID won't be unset
         $clone = clone $this->record;
         $clone->delete();
 
-        Versioned::reading_stage($origStage);
+        VersionedReadingMode::restoreOriginalReadingMode();
 
         return $this->edit(Controller::curr()->getRequest());
     }
@@ -221,8 +220,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function rollback($data, $form)
     {
-        $origStage = Versioned::current_stage();
-        Versioned::reading_stage('Stage');
+        VersionedReadingMode::setStageReadingMode();
 
         if (!$this->record->canEdit()) {
             return Controller::curr()->httpError(403);
@@ -231,7 +229,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
         $this->record->publish('Live', 'Stage');
         $this->record = DataList::create($this->record->class)->byID($this->record->ID);
 
-        Versioned::reading_stage($origStage);
+        VersionedReadingMode::restoreOriginalReadingMode();
 
         $message = _t(
             'CMSMain.ROLLEDBACKPUBv2',

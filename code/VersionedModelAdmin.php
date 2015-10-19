@@ -15,8 +15,7 @@ class VersionedModelAdmin extends ModelAdmin
     public function getEditForm($id = null, $fields = null)
     {
 
-        $origStage = Versioned::current_stage();
-        Versioned::reading_stage('Stage');
+        VersionedReadingMode::setStageReadingMode();
 
         $list = $this->getList();
         $exportButton = new GridFieldExportButton('buttons-before-left');
@@ -55,7 +54,7 @@ class VersionedModelAdmin extends ModelAdmin
 
         $this->extend('updateEditForm', $form);
 
-        Versioned::reading_stage($origStage);
+        VersionedReadingMode::restoreOriginalReadingMode();
 
         return $form;
     }
