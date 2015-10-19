@@ -23,6 +23,8 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function ItemEditForm()
     {
+        VersionedReadingMode::setStageReadingMode();
+
         $form = parent::ItemEditForm();
         /* @var $actions FieldList */
         if ($form instanceof Form) {
@@ -80,6 +82,8 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
                 $actions->removeByName('action_doDelete');
             }
         }
+
+        VersionedReadingMode::restoreOriginalReadingMode();
 
         return $form;
     }
