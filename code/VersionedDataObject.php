@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class VersionedDataObject
+ */
 class VersionedDataObject extends Versioned
 {
     public function __construct()
@@ -12,12 +15,16 @@ class VersionedDataObject extends Versioned
         );
     }
 
+    /**
+     * @param $class
+     * @param $extension
+     * @param $args
+     * @return array
+     */
     public static function get_extra_config($class, $extension, $args)
     {
         return array(
-            'db'                => array(
-                'Version' => 'Int',
-            ),
+            'db' => array('Version' => 'Int'),
             'searchable_fields' => array()
         );
     }
@@ -30,7 +37,7 @@ class VersionedDataObject extends Versioned
         $fields = array_merge(
             $fields,
             array(
-                'CMSPublishedState'  => 'State'
+                'CMSPublishedState' => 'State'
             )
         );
     }
@@ -72,7 +79,7 @@ class VersionedDataObject extends Versioned
             $table = $p;
         }
 
-        return (bool) DB::query("SELECT \"ID\" FROM \"{$table}_Live\" WHERE \"ID\" = {$this->owner->ID}")->value();
+        return (bool)DB::query("SELECT \"ID\" FROM \"{$table}_Live\" WHERE \"ID\" = {$this->owner->ID}")->value();
     }
 
     /**
@@ -104,6 +111,9 @@ class VersionedDataObject extends Versioned
         return $html;
     }
 
+    /**
+     * @param FieldList $fields
+     */
     public function updateCMSFields(FieldList $fields)
     {
         $fields->removeByName('Version');
@@ -118,15 +128,18 @@ class VersionedDataObject extends Versioned
         $oneChangedFields = array_keys($this->owner->getChangedFields(true, 1));
 
         if ($oneChangedFields && !array_diff($changedFields, $fieldsIgnoredByVersioning)) {
-            // This will have the affect of preserving the versioning
+            // This will have the effect of preserving the versioning
             $this->migrateVersion($this->owner->Version);
         }
     }
 
     /**
-    *
-    */
-    public function publish($fromStage, $toStage, $createNewVersion = false) {
+     * @param Place $fromStage
+     * @param Place $toStage
+     * @param bool|false $createNewVersion
+     */
+    public function publish($fromStage, $toStage, $createNewVersion = false)
+    {
         parent::publish($fromStage, $toStage, $createNewVersion);
         $this->owner->extend('onAfterVersionedPublish', $fromStage, $toStage, $createNewVersion);
     }

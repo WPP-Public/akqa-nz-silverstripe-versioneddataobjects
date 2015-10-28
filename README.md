@@ -6,6 +6,10 @@ Provides Versioned DataObjects and CMS publishing buttons in SilverStripe
 
 	$ composer require heyday/silverstripe-versioneddataobjects
 
+## BetterButtons Integration
+
+	This module works with unclecheese/betterbuttons version 1.2.8
+
 ## Example
 
 ![Versioned DataObject Example](resources/example.png?raw=true)

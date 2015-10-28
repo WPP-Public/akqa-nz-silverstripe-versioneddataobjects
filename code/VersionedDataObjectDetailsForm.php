@@ -7,6 +7,9 @@ class VersionedDataObjectDetailsForm extends GridFieldDetailForm
 {
 }
 
+/**
+ * Class VersionedDataObjectDetailsForm_ItemRequest
+ */
 class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_ItemRequest
 {
     private static $allowed_actions = array(
@@ -20,6 +23,8 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function ItemEditForm()
     {
+        VersionedReadingMode::setStageReadingMode();
+
         $form = parent::ItemEditForm();
         /* @var $actions FieldList */
         if ($form instanceof Form) {
@@ -57,11 +62,11 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
                             'Cancel draft changes'
                         )
                     )->setDescription(
-                            _t(
-                                'SiteTree.BUTTONCANCELDRAFTDESC',
-                                'Delete your draft and revert to the currently published page'
-                            )
+                        _t(
+                            'SiteTree.BUTTONCANCELDRAFTDESC',
+                            'Delete your draft and revert to the currently published page'
                         )
+                    )
                 );
             }
 
@@ -76,8 +81,9 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
 
                 $actions->removeByName('action_doDelete');
             }
-
         }
+
+        VersionedReadingMode::restoreOriginalReadingMode();
 
         return $form;
     }
@@ -89,12 +95,28 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function save($data, $form)
     {
-        $reading_mode = \Versioned::get_reading_mode();
-        \Versioned::set_reading_mode('Stage.Stage');
+        VersionedReadingMode::setStageReadingMode();
 
         $value = $this->doSave($data, $form);
 
-        \Versioned::set_reading_mode($reading_mode);
+        VersionedReadingMode::restoreOriginalReadingMode();
+
+        return $value;
+    }
+
+    /**
+     * @param $data
+     * @param $form
+     * @return bool|SS_HTTPResponse
+     */
+    public function doDelete($data, $form)
+    {
+        VersionedReadingMode::setStageReadingMode();
+
+        $value = parent::doDelete($data, $form);
+
+        VersionedReadingMode::restoreOriginalReadingMode();
+
         return $value;
     }
 
@@ -141,7 +163,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
                 'CurrentForm' => function () use (&$form) {
                     return $form->forTemplate();
                 },
-                'default'     => function () use (&$controller) {
+                'default' => function () use (&$controller) {
                     return $controller->redirectBack();
                 }
             ));
@@ -184,14 +206,13 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function unPublish()
     {
-        $origStage = Versioned::current_stage();
-        Versioned::reading_stage('Live');
+        VersionedReadingMode::setLiveReadingMode();
 
         // This way our ID won't be unset
         $clone = clone $this->record;
         $clone->delete();
 
-        Versioned::reading_stage($origStage);
+        VersionedReadingMode::restoreOriginalReadingMode();
 
         return $this->edit(Controller::curr()->getRequest());
     }
@@ -203,13 +224,16 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function rollback($data, $form)
     {
+        VersionedReadingMode::setStageReadingMode();
+
         if (!$this->record->canEdit()) {
             return Controller::curr()->httpError(403);
         }
 
-        $this->record->doRollbackTo('Live');
-
+        $this->record->publish('Live', 'Stage');
         $this->record = DataList::create($this->record->class)->byID($this->record->ID);
+
+        VersionedReadingMode::restoreOriginalReadingMode();
 
         $message = _t(
             'CMSMain.ROLLEDBACKPUBv2',
@@ -220,4 +244,22 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
 
         return $this->edit(Controller::curr()->getRequest());
     }
+
+    /////////////////////////////////////////////////////
+    // Better Buttons integration
+    ////////////////////////////////////////////////////
+
+    /**
+     * Override the doSaveAnQuit action from better buttons so that it uses the versioned way fo saving things.
+     * @param $data
+     * @param $form
+     */
+    public function doSaveAndQuit($data, $form)
+    {
+        $this->save($data, $form);
+        $controller = $this->getToplevelController();
+        $controller->getResponse()->addHeader("X-Pjax", "Content");
+        $controller->redirect($this->getBackLink());
+    }
+
 }
