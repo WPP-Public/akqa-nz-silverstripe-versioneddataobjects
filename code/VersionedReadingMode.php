@@ -26,7 +26,7 @@ class VersionedReadingMode
     public static function setLiveReadingMode()
     {
         self::$originalReadingMode = Versioned::current_stage();
-        Versioned::reading_stage('Stage');
+        Versioned::reading_stage('Live');
     }
 
     /**
