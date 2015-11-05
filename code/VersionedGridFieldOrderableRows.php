@@ -1,6 +1,8 @@
 <?php
 
 /**
+ * Class VersionedGridFieldOrderableRows
+ *
  * Allows grid field rows to be re-ordered via drag and drop. Both normal data
  * lists and many many lists can be ordered.
  *
@@ -13,7 +15,9 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
     GridField_HTMLProvider,
     GridField_URLHandler
 {
-
+    /**
+     * @var array
+     */
     private static $allowed_actions = array(
         'handleReorder',
         'handleMoveToPage'
@@ -46,7 +50,7 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
     /**
      * Sets the field used to specify the sort.
      *
-     * @param string $sortField
+     * @param string $field
      * @return VersionedGridFieldOrderableRows $this
      */
     public function setSortField($field)
@@ -59,7 +63,8 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
      * Gets the table which contains the sort field.
      *
      * @param DataList $list
-     * @return string
+     * @return mixed
+     * @throws Exception
      */
     public function getSortTable(DataList $list)
     {
@@ -85,7 +90,14 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
         throw new Exception("Couldn't find the sort field '$field'");
     }
 
-    public function getURLHandlers($grid)
+    /**
+     * Return URLs to be handled by this grid field, in an array the same form
+     * as $url_handlers.
+     *
+     * Handler methods will be called on the component, rather than the
+     * {@link GridField}.
+     */
+    public function getURLHandlers($gridField)
     {
         return array(
             'POST reorder' => 'handleReorder',
@@ -94,47 +106,112 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
     }
 
     /**
-     * @param GridField $field
+     * Returns a map where the keys are fragment names and the values are
+     * pieces of HTML to add to these fragments.
+     *
+     * Here are 4 built-in fragments: 'header', 'footer', 'before', and
+     * 'after', but components may also specify fragments of their own.
+     *
+     * To specify a new fragment, specify a new fragment by including the
+     * text "$DefineFragment(fragmentname)" in the HTML that you return.
+     *
+     * Fragment names should only contain alphanumerics, -, and _.
+     *
+     * If you attempt to return HTML for a fragment that doesn't exist, an
+     * exception will be thrown when the {@link GridField} is rendered.
+     *
+     * @return array
      */
-    public function getHTMLFragments($field)
+    public function getHTMLFragments($gridField)
     {
-        VersionedGridFieldExtensions::include_requirements();
+        $moduleDir = basename(dirname(__DIR__));
 
-        $field->addExtraClass('ss-versioned-gridfield-orderable');
-        $field->setAttribute('data-url-reorder', $field->Link('reorder'));
-        $field->setAttribute('data-url-movetopage', $field->Link('movetopage'));
+        Requirements::css($moduleDir . '/css/GridFieldExtensions.css');
+        Requirements::javascript($moduleDir . '/javascript/GridFieldExtensions.js');
+
+        $gridField->addExtraClass('ss-versioned-gridfield-orderable');
+        $gridField->setAttribute('data-url-reorder', $gridField->Link('reorder'));
+        $gridField->setAttribute('data-url-movetopage', $gridField->Link('movetopage'));
+
+        return array();
     }
 
-    public function augmentColumns($grid, &$cols)
+    /**
+     * Modify the list of columns displayed in the table.
+     *
+     * @see {@link GridFieldDataColumns->getDisplayFields()}
+     * @see {@link GridFieldDataColumns}.
+     *
+     * @param GridField $gridField
+     * @param array - List reference of all column names.
+     */
+    public function augmentColumns($gridField, &$columns)
     {
-        if (!in_array('Reorder', $cols) && $grid->getState()->VersionedGridFieldOrderableRows->enabled) {
+        if (!in_array('Reorder', $columns) && $gridField->getState()->VersionedGridFieldOrderableRows->enabled) {
             array_unshift($cols, 'Reorder');
         }
     }
 
-    public function getColumnsHandled($grid)
+    /**
+     * Names of all columns which are affected by this component.
+     *
+     * @param GridField $gridField
+     * @return array
+     */
+    public function getColumnsHandled($gridField)
     {
         return array('Reorder');
     }
 
-    public function getColumnContent($grid, $record, $col)
+    /**
+     * HTML for the column, content of the <td> element.
+     *
+     * @param  GridField $gridField
+     * @param  DataObject $record - Record displayed in this row
+     * @param  string $columnName
+     * @return string - HTML for the column. Return NULL to skip.
+     */
+    public function getColumnContent($gridField, $record, $columnName)
     {
         return ViewableData::create()->renderWith('VersionedGridFieldOrderableRowsDragHandle');
     }
 
-    public function getColumnAttributes($grid, $record, $col)
+    /**
+     * Attributes for the element containing the content returned by {@link getColumnContent()}.
+     *
+     * @param  GridField $gridField
+     * @param  DataObject $record displayed in this row
+     * @param  string $columnName
+     * @return array
+     */
+    public function getColumnAttributes($gridField, $record, $columnName)
     {
         return array('class' => 'col-reorder');
     }
 
-    public function getColumnMetadata($grid, $col)
+    /**
+     * Additional metadata about the column which can be used by other components,
+     * e.g. to set a title for a search column header.
+     *
+     * @param GridField $gridField
+     * @param string $columnName
+     * @return array - Map of arbitrary metadata identifiers to their values.
+     */
+    public function getColumnMetadata($gridField, $columnName)
     {
         return array('title' => '');
     }
 
-    public function getManipulatedData(GridField $grid, SS_List $list)
+    /**
+     * Manipulate the {@link DataList} as needed by this grid modifier.
+     *
+     * @param GridField
+     * @param SS_List
+     * @return DataList
+     */
+    public function getManipulatedData(GridField $gridField, SS_List $dataList)
     {
-        $state = $grid->getState();
+        $state = $gridField->getState();
         $sorted = (bool)((string)$state->GridFieldSortableHeader->SortColumn);
 
         // If the data has not been sorted by the user, then sort it by the
@@ -142,14 +219,18 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
         $state->VersionedGridFieldOrderableRows->enabled = !$sorted;
 
         if (!$sorted) {
-            return $list->sort($this->getSortField());
+            return $dataList->sort($this->getSortField());
         } else {
-            return $list;
+            return $dataList;
         }
     }
 
     /**
      * Handles requests to reorder a set of IDs in a specific order.
+     *
+     * @param $grid
+     * @param $request
+     * @return mixed
      */
     public function handleReorder($grid, $request)
     {
@@ -186,6 +267,10 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
 
     /**
      * Handles requests to move an item to the previous or next page.
+     *
+     * @param GridField $grid
+     * @param $request
+     * @return mixed
      */
     public function handleMoveToPage(GridField $grid, $request)
     {
@@ -244,6 +329,12 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
         return $grid->FieldHolder();
     }
 
+    /**
+     * @param $list
+     * @param array $values
+     * @param array $order
+     * @throws Exception
+     */
     protected function reorderItems($list, array $values, array $order)
     {
         // Get a list of sort values that can be used.
@@ -279,17 +370,22 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
     }
 
     /**
-     * Invalidate cache if cache include is
-     * @param $class
+     * Invalidate cache if the cache-include module is installed
+     * @param $className
      */
-    protected function invalidateCache($className) {
+    protected function invalidateCache($className)
+    {
         $class = singleton($className);
         if ($class->has_extension('Heyday\CacheInclude\SilverStripe\InvalidationExtension')) {
             $dataobject = $class::get()->first();
-            $dataobject->write();
+            $dataobject->onAfterWrite();
         }
     }
 
+    /**
+     * @param DataList $list
+     * @throws Exception
+     */
     protected function populateSortValues(DataList $list)
     {
         $list = clone $list;
@@ -311,6 +407,11 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
         }
     }
 
+    /**
+     * @param DataList $list
+     * @param $ids
+     * @return string
+     */
     protected function getSortTableClauseForIds(DataList $list, $ids)
     {
         if (is_array($ids)) {
