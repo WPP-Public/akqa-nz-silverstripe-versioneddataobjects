@@ -148,7 +148,7 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
     public function augmentColumns($gridField, &$columns)
     {
         if (!in_array('Reorder', $columns) && $gridField->getState()->VersionedGridFieldOrderableRows->enabled) {
-            array_unshift($cols, 'Reorder');
+            array_unshift($columns, 'Reorder');
         }
     }
 
