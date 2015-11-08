@@ -34,7 +34,10 @@ class VersionedReadingMode
      */
     public static function restoreOriginalReadingMode()
     {
-        if (isset(self::$originalReadingMode) && in_array(self::$originalReadingMode, ['Stage', 'Live'])) {
+        if (
+            isset(self::$originalReadingMode) &&
+            in_array(self::$originalReadingMode, array('Stage', 'Live'))
+        ) {
             Versioned::reading_stage(self::$originalReadingMode);
         }
     }
