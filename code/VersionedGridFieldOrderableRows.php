@@ -378,7 +378,7 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
         $class = singleton($className);
         if ($class->has_extension('Heyday\CacheInclude\SilverStripe\InvalidationExtension')) {
             $dataobject = $class::get()->first();
-            $dataobject->onChange('write');
+            $dataobject->extend('onAfterReorder');
         }
     }
 
