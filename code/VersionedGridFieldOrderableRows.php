@@ -366,19 +366,18 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
                 DB::query($liveQuery);
             }
         }
-        $this->invalidateCache($list->dataClass());
+
+        $this->extendItems($list, 'onAfterReorder');
     }
 
     /**
-     * Invalidate cache if the cache-include module is installed
-     * @param $className
+     * @param RelationList $list
+     * @param string $methodName
      */
-    protected function invalidateCache($className)
+    protected function extendItems($list, $methodName)
     {
-        $class = singleton($className);
-        if ($class->has_extension('Heyday\CacheInclude\SilverStripe\InvalidationExtension')) {
-            $dataobject = $class::get()->first();
-            $dataobject->onAfterWrite();
+        foreach ($list as $dataobject) {
+            $dataobject->extend($methodName);
         }
     }
 
