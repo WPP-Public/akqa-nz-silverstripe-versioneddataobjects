@@ -143,5 +143,13 @@ class VersionedDataObject extends Versioned
         parent::publish($fromStage, $toStage, $createNewVersion);
         $this->owner->extend('onAfterVersionedPublish', $fromStage, $toStage, $createNewVersion);
     }
+    
+	/**
+	 * Improves interoperability with other components
+	 * @return void
+	 */
+	public function doPublish() {
+		$this->publish('Stage','Live');
+	} 
 
 }
