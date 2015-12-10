@@ -43,7 +43,7 @@ class Page extends SiteTree
     {
         $fields = parent::getCMSFields();
 
-        $fields->addFieldsToTab(
+        $fields->addFieldToTab(
             'Root.Slices',
             new GridField(
                 'Slices',
