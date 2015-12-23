@@ -133,6 +133,16 @@ class VersionedDataObject extends Versioned
         }
     }
 
+    public function onAfterDelete() {
+        parent::onBeforeDelete();
+
+        if (Versioned::current_stage() == 'Stage') {
+            VersionedReadingMode::setLiveReadingMode();
+            $this->owner->delete();
+            VersionedReadingMode::restoreOriginalReadingMode();
+        }
+    }
+
     /**
      * @param Place $fromStage
      * @param Place $toStage
