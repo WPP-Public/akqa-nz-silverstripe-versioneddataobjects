@@ -308,14 +308,18 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
             $order[] = $swap->ID;
 
             foreach ($existing as $_id => $sort) {
-                if ($id != $_id) $order[] = $_id;
+                if ($id != $_id) {
+                    $order[] = $_id;
+                }
             }
         } elseif ($to == 'next') {
             $swap = $list->limit(1, $page * $per)->first();
             $values[$swap->ID] = $swap->$field;
 
             foreach ($existing as $_id => $sort) {
-                if ($id != $_id) $order[] = $_id;
+                if ($id != $_id) {
+                    $order[] = $_id;
+                }
             }
 
             $order[] = $swap->ID;
@@ -438,5 +442,4 @@ class VersionedGridFieldOrderableRows extends RequestHandler implements
 
         return "\"ID\" $value";
     }
-
 }
