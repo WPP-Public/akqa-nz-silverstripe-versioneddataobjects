@@ -14,7 +14,6 @@ class VersionedModelAdmin extends ModelAdmin
      */
     public function getEditForm($id = null, $fields = null)
     {
-
         VersionedReadingMode::setStageReadingMode();
 
         $list = $this->getList();

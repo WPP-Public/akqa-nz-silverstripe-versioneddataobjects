@@ -154,7 +154,8 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
 
         try {
             $form->saveInto($this->record);
-            $this->record->writeToStage('Stage');;
+            $this->record->writeToStage('Stage');
+            ;
             $list->add($this->record, $extraData);
             $this->record->publish('Stage', 'Live');
         } catch (ValidationException $e) {
@@ -261,5 +262,4 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
         $controller->getResponse()->addHeader("X-Pjax", "Content");
         $controller->redirect($this->getBackLink());
     }
-
 }
