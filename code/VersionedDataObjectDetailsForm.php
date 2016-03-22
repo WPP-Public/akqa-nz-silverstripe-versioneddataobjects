@@ -83,6 +83,8 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
             }
         }
 
+        $this->extend("updateItemEditForm", $form);
+
         VersionedReadingMode::restoreOriginalReadingMode();
 
         return $form;
