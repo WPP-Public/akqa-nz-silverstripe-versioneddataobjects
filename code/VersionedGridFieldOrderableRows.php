@@ -1,5 +1,24 @@
 <?php
 
+namespace Heyday\VersionedDataObjects;
+
+use ClassInfo;
+use DataList;
+use DataObject;
+use DB;
+use Exception;
+use GridField;
+use GridField_ColumnProvider;
+use GridField_DataManipulator;
+use GridField_HTMLProvider;
+use GridField_URLHandler;
+use ManyManyList;
+use RelationList;
+use RequestHandler;
+use Requirements;
+use SS_List;
+use ViewableData;
+
 /**
  * Class VersionedGridFieldOrderableRows
  *

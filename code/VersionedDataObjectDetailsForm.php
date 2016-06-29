@@ -1,5 +1,20 @@
 <?php
 
+namespace Heyday\VersionedDataObjects;
+
+use Controller;
+use FieldList;
+use Form;
+use FormAction;
+use GridFieldDetailForm;
+use GridFieldDetailForm_ItemRequest;
+use HTMLText;
+use ManyManyList;
+use PjaxResponseNegotiator;
+use SS_HTTPResponse;
+use ValidationException;
+use ViewableData_Customised;
+
 /**
  * Class VersionedDataObjectDetailsForm
  */

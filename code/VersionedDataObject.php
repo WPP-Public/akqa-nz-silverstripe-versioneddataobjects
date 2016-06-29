@@ -1,5 +1,12 @@
 <?php
 
+namespace Heyday\VersionedDataObjects;
+
+use DB;
+use FieldList;
+use HTMLText;
+use Versioned;
+
 /**
  * Class VersionedDataObject
  */

@@ -1,5 +1,16 @@
 <?php
 
+namespace Heyday\VersionedDataObjects;
+
+use CMSForm;
+use Controller;
+use FieldList;
+use GridField;
+use GridFieldConfig_RecordEditor;
+use GridFieldExportButton;
+use GridFieldPrintButton;
+use ModelAdmin;
+
 /**
  * Class VersionedModelAdmin
  */
