@@ -1,5 +1,9 @@
 <?php
 
+namespace Heyday\VersionedDataObjects;
+
+use Versioned;
+
 /**
  * Class VersionedReadingMode
  */
