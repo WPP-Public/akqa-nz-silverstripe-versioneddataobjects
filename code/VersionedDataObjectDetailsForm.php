@@ -43,6 +43,8 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
         $form = parent::ItemEditForm();
         /* @var $actions FieldList */
         if ($form instanceof Form) {
+            $this->extend("updateItemEditForm", $form);
+            
             $actions = $form->Actions();
 
             $actions->replaceField(
@@ -96,9 +98,6 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
 
                 $actions->removeByName('action_doDelete');
             }
-        
-            $this->extend("updateItemEditForm", $form);
-        
         }
 
         VersionedReadingMode::restoreOriginalReadingMode();
