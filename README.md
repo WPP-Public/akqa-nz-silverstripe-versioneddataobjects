@@ -25,7 +25,7 @@ class Slice extends DataObject
 	];
 
 	private static $extensions = [
-		'VersionedDataObject'
+		'Heyday\VersionedDataObjects\VersionedDataObject'
 	];
 }
 ```
@@ -52,7 +52,7 @@ public function getCMSFields()
 	);
 
 	$config->removeComponentsByType('GridFieldDetailForm');
-	$config->addComponent(new VersionedDataObjectDetailsForm());
+	$config->addComponent(new Heyday\VersionedDataObjects\VersionedDataObjectDetailsForm());
 
 	return $fields;
 }
