@@ -25,7 +25,7 @@ class Slice extends DataObject
 	];
 
 	private static $extensions = [
-		'VersionedDataObject'
+		'Heyday\VersionedDataObjects\VersionedDataObject'
 	];
 }
 ```
