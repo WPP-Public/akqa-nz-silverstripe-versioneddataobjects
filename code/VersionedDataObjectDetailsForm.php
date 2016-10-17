@@ -88,7 +88,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
                 );
             }
 
-            $actions->push($publish);
+            $actions->insertAfter('action_save', $publish);
 
             if ($published) {
                 /* @var $unpublish FormAction */
