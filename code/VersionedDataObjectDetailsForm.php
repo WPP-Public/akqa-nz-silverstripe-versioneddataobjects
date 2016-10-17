@@ -14,6 +14,7 @@ use PjaxResponseNegotiator;
 use SS_HTTPResponse;
 use ValidationException;
 use ViewableData_Customised;
+use DataList;
 
 /**
  * Class VersionedDataObjectDetailsForm
