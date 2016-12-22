@@ -81,8 +81,10 @@ class VersionedDataObject extends Versioned
         }
 
         $table = $this->owner->class;
-
         while (($p = get_parent_class($table)) !== 'DataObject') {
+            if (!$p::has_extension(__CLASS__)) {
+                break;
+            }  
             $table = $p;
         }
 
