@@ -63,7 +63,7 @@ public function getCMSFields()
 ### Versioned DataObjects in a ModelAdmin
 
 ```php
-class SliceAdmin extends Heyday\VersionedDataObjects/VersionedModelAdmin
+class SliceAdmin extends Heyday\VersionedDataObjects\VersionedModelAdmin
 {
 	private static $menu_title = 'Slices';
 
