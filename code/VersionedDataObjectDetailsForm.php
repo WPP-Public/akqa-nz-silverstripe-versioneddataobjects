@@ -3,6 +3,7 @@
 namespace Heyday\VersionedDataObjects;
 
 use Controller;
+use DataList;
 use FieldList;
 use Form;
 use FormAction;
@@ -11,10 +12,10 @@ use GridFieldDetailForm_ItemRequest;
 use HTMLText;
 use ManyManyList;
 use PjaxResponseNegotiator;
+use Requirements;
 use SS_HTTPResponse;
 use ValidationException;
 use ViewableData_Customised;
-use DataList;
 
 /**
  * Class VersionedDataObjectDetailsForm
@@ -39,6 +40,8 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function ItemEditForm()
     {
+        Requirements::javascript(CMS_DIR.'/javascript/CMSMain.EditForm.js');
+
         VersionedReadingMode::setStageReadingMode();
 
         $form = parent::ItemEditForm();
