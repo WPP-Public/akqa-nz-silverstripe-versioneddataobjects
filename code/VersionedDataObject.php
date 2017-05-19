@@ -99,14 +99,14 @@ class VersionedDataObject extends Versioned
         if ($this->isPublished()) {
             if ($this->stagesDiffer('Stage', 'Live')) {
                 $colour = '#1391DF';
-                $text = _t('VersionedDataobjects.Modified','Modified');
+                $text = _t('VersionedDataobjects.MODIFIED','Modified');
             } else {
                 $colour = '#18BA18';
                 $text = _t('VersionedDataobjects.PUBLISHED','Published');
             }
         } else {
             $colour = '#C00';
-            $text = _t('VersionedDataobjects.Draft','Draft');
+            $text = _t('VersionedDataobjects.DRAFT','Draft');
         }
 
         $html->setValue(sprintf(
