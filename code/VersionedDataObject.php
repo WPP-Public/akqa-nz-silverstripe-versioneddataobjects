@@ -44,7 +44,7 @@ class VersionedDataObject extends Versioned
         $fields = array_merge(
             $fields,
             array(
-                'CMSPublishedState' => 'State'
+                'CMSPublishedState' => _t('VersionedDataobjects.STATE','State')
             )
         );
     }
@@ -99,14 +99,14 @@ class VersionedDataObject extends Versioned
         if ($this->isPublished()) {
             if ($this->stagesDiffer('Stage', 'Live')) {
                 $colour = '#1391DF';
-                $text = 'Modified';
+                $text = _t('VersionedDataobjects.MODIFIED','Modified');
             } else {
                 $colour = '#18BA18';
-                $text = 'Published';
+                $text = _t('VersionedDataobjects.PUBLISHED','Published');
             }
         } else {
             $colour = '#C00';
-            $text = 'Draft';
+            $text = _t('VersionedDataobjects.DRAFT','Draft');
         }
 
         $html->setValue(sprintf(

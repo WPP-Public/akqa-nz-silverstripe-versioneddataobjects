@@ -1,0 +1,6 @@
+en:
+  VersionedDataobjects:
+    STATE: "State"
+    PUBLISHED: "Published"
+    MODIFIED: "Modified"
+    DRAFT: "Draft"

@@ -1,0 +1,6 @@
+pl:
+  VersionedDataobjects:
+    STATE: "Stan"
+    PUBLISHED: "Opublikowano"
+    MODIFIED: "Zmodyfikowano"
+    DRAFT: "Szkic"
