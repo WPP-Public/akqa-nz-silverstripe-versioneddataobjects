@@ -1,0 +1,6 @@
+sk:
+  VersionedDataobjects:
+    STATE: "Stav zverejnenia"
+    PUBLISHED: "Zverejnené"
+    MODIFIED: "Zmenené"
+    DRAFT: "Koncept"
