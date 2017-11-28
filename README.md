@@ -2,6 +2,8 @@
 
 This module provides an easy to use implementation of SilverStripe's built-in `Versioned` extension for DataObjects, along with admin components to manage your versioned things.
 
+**IMPORTANT**: Versioning of DataObjects is [built-in](https://docs.silverstripe.org/en/4/developer_guides/model/versioning/) to the `Versioned` extension in SilverStripe 4.x and newer.
+
 ![Versioned DataObject Example](resources/example.png?raw=true)
 ![Versioned DataObject Example 2](resources/example2.png?raw=true)
 
