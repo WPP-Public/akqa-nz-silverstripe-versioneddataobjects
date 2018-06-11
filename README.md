@@ -88,14 +88,14 @@ VersionedFoo::get()
 	->setDataQueryParam(['Versioned.stage' => 'Stage']);
 ```
 
-If you can't modify a query, you can use [`VersionedReadingMode`](https://github.com/heyday/silverstripe-versioneddataobjects/blob/master/code/VersionedReadingMode.php) from this module to change and restore the global reading mode around a piece of code:
+If you can't modify a query, you can use [`VersionedDataObjectReadingMode`](https://github.com/heyday/silverstripe-versioneddataobjects/blob/master/code/VersionedDataObjectReadingMode.php) from this module to change and restore the global reading mode around a piece of code:
 
 ```php
-VersionedReadingMode::setStageReadingMode();
+VersionedDataObjectReadingMode::setStageReadingMode();
 
 // ... code that runs queries
 
-VersionedReadingMode::restoreOriginalReadingMode();
+VersionedDataObjectReadingMode::restoreOriginalReadingMode();
 ```
 
 If you suspect you might be seeing an issue from incorrect reading mode, the global reading mode can be changed between *live* and *stage* by adding the query string `?stage=Stage` or `?stage=Live` to the current URL.

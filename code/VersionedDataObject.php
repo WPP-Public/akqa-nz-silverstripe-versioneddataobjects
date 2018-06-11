@@ -144,9 +144,9 @@ class VersionedDataObject extends Versioned
         parent::onBeforeDelete();
 
         if (Versioned::current_stage() == 'Stage') {
-            VersionedReadingMode::setLiveReadingMode();
+            VersionedDataObjectReadingMode::setLiveReadingMode();
             $this->owner->delete();
-            VersionedReadingMode::restoreOriginalReadingMode();
+            VersionedDataObjectReadingMode::restoreOriginalReadingMode();
         }
     }
 
