@@ -5,9 +5,9 @@ namespace Heyday\VersionedDataObjects;
 use Versioned;
 
 /**
- * Class VersionedReadingMode
+ * Class VersionedDataObjectReadingMode
  */
-class VersionedReadingMode
+class VersionedDataObjectReadingMode
 {
     /**
      * @var String
