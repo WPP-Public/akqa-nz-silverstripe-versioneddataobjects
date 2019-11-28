@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Class VersionedReadingMode
+ * Class VersionedReadingModeSS37
  */
-class VersionedReadingMode
+class VersionedReadingModeSS37
 {
     /**
      * @var String

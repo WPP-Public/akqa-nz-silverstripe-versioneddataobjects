@@ -23,7 +23,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function ItemEditForm()
     {
-        VersionedReadingMode::setStageReadingMode();
+        VersionedReadingModeSS37::setStageReadingMode();
 
         $form = parent::ItemEditForm();
         /* @var $actions FieldList */
@@ -86,7 +86,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
         
         }
 
-        VersionedReadingMode::restoreOriginalReadingMode();
+        VersionedReadingModeSS37::restoreOriginalReadingMode();
 
         return $form;
     }
@@ -98,11 +98,11 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function save($data, $form)
     {
-        VersionedReadingMode::setStageReadingMode();
+        VersionedReadingModeSS37::setStageReadingMode();
 
         $value = $this->doSave($data, $form);
 
-        VersionedReadingMode::restoreOriginalReadingMode();
+        VersionedReadingModeSS37::restoreOriginalReadingMode();
 
         return $value;
     }
@@ -114,11 +114,11 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function doDelete($data, $form)
     {
-        VersionedReadingMode::setStageReadingMode();
+        VersionedReadingModeSS37::setStageReadingMode();
 
         $value = parent::doDelete($data, $form);
 
-        VersionedReadingMode::restoreOriginalReadingMode();
+        VersionedReadingModeSS37::restoreOriginalReadingMode();
 
         return $value;
     }
@@ -209,13 +209,13 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function unPublish()
     {
-        VersionedReadingMode::setLiveReadingMode();
+        VersionedReadingModeSS37::setLiveReadingMode();
 
         // This way our ID won't be unset
         $clone = clone $this->record;
         $clone->delete();
 
-        VersionedReadingMode::restoreOriginalReadingMode();
+        VersionedReadingModeSS37::restoreOriginalReadingMode();
 
         return $this->edit(Controller::curr()->getRequest());
     }
@@ -227,7 +227,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
      */
     public function rollback($data, $form)
     {
-        VersionedReadingMode::setStageReadingMode();
+        VersionedReadingModeSS37::setStageReadingMode();
 
         if (!$this->record->canEdit()) {
             return Controller::curr()->httpError(403);
@@ -236,7 +236,7 @@ class VersionedDataObjectDetailsForm_ItemRequest extends GridFieldDetailForm_Ite
         $this->record->publish('Live', 'Stage');
         $this->record = DataList::create($this->record->class)->byID($this->record->ID);
 
-        VersionedReadingMode::restoreOriginalReadingMode();
+        VersionedReadingModeSS37::restoreOriginalReadingMode();
 
         $message = _t(
             'CMSMain.ROLLEDBACKPUBv2',
